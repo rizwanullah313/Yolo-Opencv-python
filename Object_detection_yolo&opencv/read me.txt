@@ -1,0 +1,6 @@
+pip install opencv-python
+pip install numpy
+
+download config file from yolo website
+also download weight file from yolo website
+yolov3-320.weights
