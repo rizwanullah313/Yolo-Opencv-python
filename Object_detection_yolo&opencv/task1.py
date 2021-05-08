@@ -1,10 +1,12 @@
 import cv2
+import cv2.dnn
 import numpy as np
 
 # cap = cv2.VideoCapture(0)
-cap1 = cv2.VideoCapture("Resources/cow.jpg")
+cap1 = cv2.VideoCapture("Resources/122.jpg")
 whT = 320
 confThreshold = 0.5
+nmsThreshold = 0.3
 
 classFile = 'coco.names'
 classNames = []
@@ -40,7 +42,14 @@ def findObjects(outputs, img):
                 confs.append(float(confidense))
                 print(len(bbox))
 
-
+            indices = cv2.dnn.NMSBoxes(bbox, confs, confThreshold, nmsThreshold)
+            print(indices)
+            for i in indices:
+                i = i[0]
+                box = bbox[i]
+                x, y, w, h = box[0], box[1], box[2], box[3]
+                cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 255), 2)
+                cv2.putText(img,f'{classNames[classIds[i]].upper()} {int(confs[i]*100)}%', (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (250, 23, 25), 1)
 while True:
     success, img = cap1.read()
 
